@@ -5,17 +5,18 @@ on:
     branches: [main]
 
 jobs:
-  container-job:
+  exit-codes:
     runs-on: ubuntu-latest
-    container:
-      image: node:16
-      env:
-        NODE_ENV: development
-      ports:
-        - 8080
-      volumes:
-        - my_docker_volume:/volume_mount
-      options: --cpus 1
     steps:
-      - name: Check Node.js version
-        run: node --version
+      - name: Successful command
+        run: |
+          echo "This command will succeed"
+          exit 0
+
+      - name: Failed command
+        run: |
+          echo "This command will fail"
+          exit 1
+
+      - name: Never executed
+        run: echo "This step will not run because previous step failed"
