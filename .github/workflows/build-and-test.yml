@@ -5,18 +5,23 @@ on:
     branches: [main]
 
 jobs:
-  exit-codes:
+  error-response:
     runs-on: ubuntu-latest
     steps:
-      - name: Successful command
+      - name: Main process
+        id: main
         run: |
-          echo "This command will succeed"
-          exit 0
-
-      - name: Failed command
-        run: |
-          echo "This command will fail"
+          echo "Running main process"
           exit 1
 
-      - name: Never executed
-        run: echo "This step will not run because previous step failed"
+      - name: Error notification
+        if: failure()
+        run: |
+          echo "Main process failed"
+          echo "Sending notification to team"
+
+      - name: Cleanup
+        if: always()
+        run: |
+          echo "Performing cleanup"
+          echo "This runs regardless of previous step results"
