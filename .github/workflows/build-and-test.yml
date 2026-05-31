@@ -5,23 +5,26 @@ on:
     branches: [main]
 
 jobs:
-  error-response:
+  custom-error-messages:
     runs-on: ubuntu-latest
     steps:
-      - name: Main process
-        id: main
+      - name: Check requirements
         run: |
-          echo "Running main process"
-          exit 1
+          if [ ! -f "config.json" ]; then
+            echo "::error::Required file config.json is missing"
+            exit 1
+          fi
 
-      - name: Error notification
-        if: failure()
+      - name: Validate input
         run: |
-          echo "Main process failed"
-          echo "Sending notification to team"
+          if [[ -z "${{ github.event.inputs.version }}" ]]; then
+            echo "::error::Version parameter is required"
+            exit 1
+          fi
 
-      - name: Cleanup
-        if: always()
+      - name: Process with validation
         run: |
-          echo "Performing cleanup"
-          echo "This runs regardless of previous step results"
+          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
+            echo "::warning::This action is recommended to run on main branch"
+          fi
+          echo "Processing with version ${{ github.event.inputs.version }}"
