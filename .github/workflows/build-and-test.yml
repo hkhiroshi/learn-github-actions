@@ -5,26 +5,16 @@ on:
     branches: [main]
 
 jobs:
-  custom-error-messages:
+jobs:
+  generate-number:
     runs-on: ubuntu-latest
     steps:
-      - name: Check requirements
-        run: |
-          if [ ! -f "config.json" ]; then
-            echo "::error::Required file config.json is missing"
-            exit 1
-          fi
+      - name: Generate random number
+        id: random
+        uses: actions/generate-random@v1
+        with:
+          min: 1
+          max: 100
 
-      - name: Validate input
-        run: |
-          if [[ -z "${{ github.event.inputs.version }}" ]]; then
-            echo "::error::Version parameter is required"
-            exit 1
-          fi
-
-      - name: Process with validation
-        run: |
-          if [[ "${{ github.ref }}" != "refs/heads/main" ]]; then
-            echo "::warning::This action is recommended to run on main branch"
-          fi
-          echo "Processing with version ${{ github.event.inputs.version }}"
+      - name: Use random number
+        run: echo "Random number is ${{ steps.random.outputs.number }}"
