@@ -5,15 +5,20 @@ on:
     branches: [main]
 
 jobs:
-  generate-number:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate random number
-        id: random
-        uses: actions/generate-random@v1
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          min: 1
-          max: 100
-
-      - name: Use random number
-        run: echo "Random number is ${{ steps.random.outputs.number }}"
+          node-version: "20"
+      - name: Cache npm packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ runner.os }}-
+      - name: Install dependencies
+        run: npm install
