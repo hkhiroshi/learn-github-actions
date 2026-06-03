@@ -23,6 +23,7 @@ jobs:
           fi
 
       - name: Create directory
+        shell: bash
         run: |
           if [ "${{ runner.os }}" == "Windows" ]; then
             mkdir test_dir
