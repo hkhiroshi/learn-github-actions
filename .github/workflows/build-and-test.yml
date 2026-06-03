@@ -5,11 +5,14 @@ on:
     branches: [main]
 
 jobs:
-  example-matrix:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        environment: [development, staging, production]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - name: Print current environment
-        run: echo "Current environment is ${{ matrix.environment }}"
+      - uses: actions/checkout@v4
+      - name: Show OS information
+        run: |
+          echo "Running on ${{ runner.os }}"
+          echo "Architecture: ${{ runner.arch }}"
