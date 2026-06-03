@@ -13,20 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: List directory contents
-        shell: bash
+      - name: Install dependencies
         run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            dir
-          else
-            ls -la
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y build-essential
+          elif [ "${{ runner.os }}" == "Windows" ]; then
+            choco install mingw
+          elif [ "${{ runner.os }}" == "macOS" ]; then
+            brew install gcc
           fi
 
-      - name: Create directory
-        shell: bash
+      - name: Build project
         run: |
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            mkdir test_dir
-          else
-            mkdir -p test_dir
-          fi
+          echo "Building on ${{ runner.os }}"
+          make
