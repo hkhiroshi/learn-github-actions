@@ -5,20 +5,11 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  example-matrix:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [development, staging, production]
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - name: Cache npm packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            npm-${{ runner.os }}-
-      - name: Install dependencies
-        run: npm install
+      - name: Print current environment
+        run: echo "Current environment is ${{ matrix.environment }}"
