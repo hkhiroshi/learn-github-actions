@@ -12,7 +12,20 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
-      - name: Show OS information
+
+      - name: List directory contents
+        shell: bash
         run: |
-          echo "Running on ${{ runner.os }}"
-          echo "Architecture: ${{ runner.arch }}"
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            dir
+          else
+            ls -la
+          fi
+
+      - name: Create directory
+        run: |
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            mkdir test_dir
+          else
+            mkdir -p test_dir
+          fi
